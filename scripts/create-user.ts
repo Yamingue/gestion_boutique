@@ -10,36 +10,32 @@
  */
 
 import "dotenv/config";
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client";
 import bcrypt from "bcryptjs";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const adapter = new PrismaMariaDb({
-  host: process.env.DATABASE_HOST ?? "localhost",
-  user: process.env.DATABASE_USER ?? "root",
-  password: process.env.DATABASE_PASSWORD ?? "",
-  database: process.env.DATABASE_NAME ?? "globalshop",
-  connectionLimit: 2,
-});
-
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+})
 
 async function main() {
   const [, , email, password, nom, roleArg] = process.argv;
 
   if (!email || !password || !nom) {
-    console.error("❌  Usage : npx tsx scripts/create-user.ts <email> <mot_de_passe> <nom> [ADMIN|VENDEUR]");
+    console.error(
+      "❌  Usage : npx tsx scripts/create-user.ts <email> <mot_de_passe> <nom> [ADMIN|VENDEUR]"
+    );
+    process.exit(1);
+  }
+
+  if (password.length < 8) {
+    console.error("❌  Le mot de passe doit contenir au moins 8 caractères.");
     process.exit(1);
   }
 
   const role = (roleArg?.toUpperCase() === "ADMIN" ? "ADMIN" : "VENDEUR") as
     | "ADMIN"
     | "VENDEUR";
-
-  if (password.length < 8) {
-    console.error("❌  Le mot de passe doit contenir au moins 8 caractères.");
-    process.exit(1);
-  }
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
@@ -53,7 +49,7 @@ async function main() {
     data: { email, password: hash, nom, role },
   });
 
-  console.log(`✅  Utilisateur créé :`);
+  console.log("✅  Utilisateur créé :");
   console.log(`    ID    : ${user.id}`);
   console.log(`    Email : ${user.email}`);
   console.log(`    Nom   : ${user.nom}`);
