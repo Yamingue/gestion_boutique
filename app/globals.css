@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Palette Tching's Fils Multiservices ── */
+  --color-brand-bleu:   #0057A8;
+  --color-brand-orange: #F47920;
+  --color-brand-blanc:  #FFFFFF;
+
+  /* ── Typographie ── */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--color-brand-blanc);
+  color: #171717;
+}
+
+/* ── Utilitaires formulaires ── */
+@layer components {
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+  .input {
+    @apply w-full rounded-lg border border-gray-300 px-3 py-2 text-sm
+           focus:outline-none focus:ring-2 focus:ring-brand-bleu;
+  }
+}

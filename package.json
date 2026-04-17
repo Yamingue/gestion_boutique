@@ -1,0 +1,44 @@
+{
+  "name": "global_shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "start:prod": "pm2 start ecosystem.config.cjs --env production",
+    "stop:prod": "pm2 stop global-shop",
+    "restart:prod": "pm2 restart global-shop",
+    "logs:prod": "pm2 logs global-shop",
+    "deploy": "npm run build && npx prisma migrate deploy && npm run restart:prod",
+    "lint": "eslint",
+    "create-user": "tsx scripts/create-user.ts",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-mariadb": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.1",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^1.8.0",
+    "next": "16.2.3",
+    "next-auth": "^4.24.13",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.19.39",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "prisma": "^7.7.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}
