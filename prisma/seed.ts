@@ -2,13 +2,16 @@
  * Seed : crée le compte administrateur initial.
  * Usage : npx tsx prisma/seed.ts
  */
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+})
 
 async function main() {
-  const hash = await bcrypt.hash("Admin@2026!", 12);
+  const hash = await bcrypt.hash("yamking01", 12);
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@tchings.com" },

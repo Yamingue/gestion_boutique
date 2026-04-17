@@ -12,8 +12,7 @@
     "logs:prod": "pm2 logs global-shop",
     "deploy": "npm run build && npx prisma migrate deploy && npm run restart:prod",
     "lint": "eslint",
-    "create-user": "tsx scripts/create-user.ts",
-    "seed": "tsx prisma/seed.ts"
+    "create-user": "tsx scripts/create-user.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.7.0",
