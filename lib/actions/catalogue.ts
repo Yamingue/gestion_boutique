@@ -5,8 +5,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { writeFile, unlink } from "fs/promises";
-import path from "path";
+import { put, del } from "@vercel/blob";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -32,21 +31,20 @@ async function sauvegarderImage(file: File): Promise<string> {
   }
 
   const ext = file.name.split(".").pop() ?? "jpg";
-  const nomFichier = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const cheminDisk = path.join(process.cwd(), "public", "uploads", "produits", nomFichier);
+  const nomFichier = `produits/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(cheminDisk, buffer);
-
-  return `/uploads/produits/${nomFichier}`;
+  const blob = await put(nomFichier, file, { access: "private" });
+  return blob.url;
 }
 
-async function supprimerImageDisk(imagePath: string) {
+async function supprimerImage(imageUrl: string) {
   try {
-    const cheminDisk = path.join(process.cwd(), "public", imagePath);
-    await unlink(cheminDisk);
+    // Uniquement les URLs Vercel Blob (les anciennes images locales sont ignorées)
+    if (imageUrl.includes("blob.vercel-storage.com")) {
+      await del(imageUrl);
+    }
   } catch {
-    // Ignore si le fichier n'existe pas
+    // Ignore si le blob n'existe plus
   }
 }
 
@@ -148,7 +146,7 @@ export async function modifierProduit(id: string, formData: FormData) {
     try {
       const nouvelleImage = await sauvegarderImage(imageFile);
       // Supprimer l'ancienne image du disque
-      if (produitActuel?.image) await supprimerImageDisk(produitActuel.image);
+      if (produitActuel?.image) await supprimerImage(produitActuel.image);
       image = nouvelleImage;
     } catch (e: unknown) {
       return { error: e instanceof Error ? e.message : "Erreur upload image." };
@@ -167,7 +165,7 @@ export async function modifierProduit(id: string, formData: FormData) {
 export async function supprimerProduit(id: string) {
   await requireAdmin();
   const produit = await prisma.produit.findUnique({ where: { id } });
-  if (produit?.image) await supprimerImageDisk(produit.image);
+  if (produit?.image) await supprimerImage(produit.image);
   await prisma.produit.delete({ where: { id } });
   revalidatePath("/catalogue");
 }

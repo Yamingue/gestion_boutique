@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useRef, useEffect } from "react";
 import Image from "next/image";
+import { blobImageSrc } from "@/lib/blobImage";
 import { useRouter } from "next/navigation";
 import { creerFacture } from "@/lib/actions/factures";
 import { creerClientRapide } from "@/lib/actions/clients";
@@ -350,7 +351,7 @@ export default function POSInterface({
                     >
                       <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center mb-2">
                         {p.image ? (
-                          <Image src={p.image} alt={p.nom} width={120} height={120}
+                          <Image src={blobImageSrc(p.image)} alt={p.nom} width={120} height={120}
                             className="object-cover w-full h-full" unoptimized />
                         ) : (
                           <Package size={28} className="text-gray-200" />
@@ -413,7 +414,7 @@ export default function POSInterface({
                 <div key={l.produitId} className="flex items-center gap-2 bg-gray-50 rounded-xl p-2">
                   <div className="w-9 h-9 rounded-lg overflow-hidden bg-gray-100 shrink-0 flex items-center justify-center">
                     {l.image ? (
-                      <Image src={l.image} alt={l.nom} width={40} height={40}
+                      <Image src={blobImageSrc(l.image)} alt={l.nom} width={40} height={40}
                         className="object-cover w-full h-full" unoptimized />
                     ) : (
                       <Package size={14} className="text-gray-300" />

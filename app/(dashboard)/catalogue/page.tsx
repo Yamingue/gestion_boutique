@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { blobImageSrc } from "@/lib/blobImage";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -80,7 +81,7 @@ export default async function CataloguePage() {
                   <td className="px-5 py-2">
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">
                       {p.image ? (
-                        <Image src={p.image} alt={p.nom} width={40} height={40}
+                        <Image src={blobImageSrc(p.image)} alt={p.nom} width={40} height={40}
                           className="object-cover w-full h-full" unoptimized />
                       ) : (
                         <Package size={18} className="text-gray-300" />
