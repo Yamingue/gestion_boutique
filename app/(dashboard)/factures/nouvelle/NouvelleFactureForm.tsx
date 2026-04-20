@@ -13,6 +13,7 @@ interface LigneForm {
   prixUnitaire: number;
   stockActuel: number;
   quantite: number;
+  tauxCommission: number | null;
 }
 
 function formatFCFA(n: number) {
@@ -40,7 +41,14 @@ export default function NouvelleFactureForm({
     if (!p) return;
     setLignes((prev) => [
       ...prev,
-      { produitId: p.id, nom: p.nom, prixUnitaire: p.prixUnitaire, stockActuel: p.stockActuel, quantite: 1 },
+      {
+        produitId: p.id,
+        nom: p.nom,
+        prixUnitaire: p.prixUnitaire,
+        stockActuel: p.stockActuel,
+        quantite: 1,
+        tauxCommission: p.tauxCommission ?? null,
+      },
     ]);
   }
 
@@ -65,7 +73,12 @@ export default function NouvelleFactureForm({
 
     const formData = new FormData(e.currentTarget);
     formData.set("lignes", JSON.stringify(
-      lignes.map((l) => ({ produitId: l.produitId, quantite: l.quantite, prixUnitaire: l.prixUnitaire }))
+      lignes.map((l) => ({
+        produitId: l.produitId,
+        quantite: l.quantite,
+        prixUnitaire: l.prixUnitaire,
+        tauxCommission: l.tauxCommission,
+      }))
     ));
 
     startTransition(async () => {
@@ -131,6 +144,7 @@ export default function NouvelleFactureForm({
               <tr className="text-gray-500 text-xs uppercase border-b border-gray-100">
                 <th className="text-left py-2">Produit</th>
                 <th className="text-right py-2 w-32">Prix unit.</th>
+                <th className="text-center py-2 w-24">Commission</th>
                 <th className="text-center py-2 w-28">Quantité</th>
                 <th className="text-right py-2 w-32">Sous-total</th>
                 <th className="w-8"></th>
@@ -141,6 +155,12 @@ export default function NouvelleFactureForm({
                 <tr key={l.produitId}>
                   <td className="py-2 font-medium text-gray-800">{l.nom}</td>
                   <td className="py-2 text-right text-gray-600">{formatFCFA(l.prixUnitaire)}</td>
+                  <td className="py-2 text-center text-sm">
+                    {l.tauxCommission != null
+                      ? <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">{l.tauxCommission}%</span>
+                      : <span className="text-gray-300">—</span>
+                    }
+                  </td>
                   <td className="py-2 text-center">
                     <input
                       type="number"

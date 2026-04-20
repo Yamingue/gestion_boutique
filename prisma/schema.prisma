@@ -43,6 +43,7 @@ model Produit {
   prixUnitaire      Int                  // en FCFA (entier)
   stockActuel       Int                  @default(0)
   seuilAlerte       Int                  @default(10)
+  tauxCommission    Float?               // % de commission sur vente (ex: 5.0 pour 5%)
   image             String?              // chemin relatif ex: /uploads/produits/xxx.webp
   lignesFacture     LigneFacture[]
   lignesCommande    LigneCommande[]
@@ -134,13 +135,14 @@ enum StatutFacture {
 }
 
 model LigneFacture {
-  id           String  @id @default(cuid())
-  factureId    String
-  facture      Facture @relation(fields: [factureId], references: [id], onDelete: Cascade)
-  produitId    String
-  produit      Produit @relation(fields: [produitId], references: [id])
-  quantite     Int
-  prixUnitaire Int
+  id             String  @id @default(cuid())
+  factureId      String
+  facture        Facture @relation(fields: [factureId], references: [id], onDelete: Cascade)
+  produitId      String
+  produit        Produit @relation(fields: [produitId], references: [id])
+  quantite       Int
+  prixUnitaire   Int
+  tauxCommission Float?  // snapshot du taux au moment de la facturation
 }
 
 // ─── Séquence de numérotation ──────────────────────────────────────────────

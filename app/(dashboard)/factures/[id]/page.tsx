@@ -94,17 +94,38 @@ export default async function DetailFacturePage({
                 <th className="text-right px-5 py-3">Prix unit.</th>
                 <th className="text-center px-5 py-3">Qté</th>
                 <th className="text-right px-5 py-3">Sous-total</th>
+                {facture.lignes.some((l) => l.tauxCommission != null) && (
+                  <th className="text-right px-5 py-3">Commission</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {facture.lignes.map((l) => (
-                <tr key={l.id}>
-                  <td className="px-5 py-3 font-medium text-gray-900">{l.produit.nom}</td>
-                  <td className="px-5 py-3 text-right text-gray-600">{formatFCFA(l.prixUnitaire)}</td>
-                  <td className="px-5 py-3 text-center text-gray-600">{l.quantite}</td>
-                  <td className="px-5 py-3 text-right font-semibold">{formatFCFA(l.prixUnitaire * l.quantite)}</td>
-                </tr>
-              ))}
+              {facture.lignes.map((l) => {
+                const sousTotal = l.prixUnitaire * l.quantite;
+                const commission = l.tauxCommission != null
+                  ? Math.round(sousTotal * l.tauxCommission / 100)
+                  : null;
+                return (
+                  <tr key={l.id}>
+                    <td className="px-5 py-3 font-medium text-gray-900">{l.produit.nom}</td>
+                    <td className="px-5 py-3 text-right text-gray-600">{formatFCFA(l.prixUnitaire)}</td>
+                    <td className="px-5 py-3 text-center text-gray-600">{l.quantite}</td>
+                    <td className="px-5 py-3 text-right font-semibold">{formatFCFA(sousTotal)}</td>
+                    {facture.lignes.some((ll) => ll.tauxCommission != null) && (
+                      <td className="px-5 py-3 text-right">
+                        {commission != null ? (
+                          <span className="text-amber-700 font-medium">
+                            {formatFCFA(commission)}
+                            <span className="text-xs text-gray-400 ml-1">({l.tauxCommission}%)</span>
+                          </span>
+                        ) : (
+                          <span className="text-gray-300">—</span>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-gray-200">
@@ -112,6 +133,16 @@ export default async function DetailFacturePage({
                 <td className="px-5 py-4 text-right text-xl font-bold text-brand-bleu">
                   {formatFCFA(facture.totalTTC)}
                 </td>
+                {facture.lignes.some((l) => l.tauxCommission != null) && (
+                  <td className="px-5 py-4 text-right text-lg font-bold text-amber-700">
+                    {formatFCFA(
+                      facture.lignes.reduce((s, l) =>
+                        s + (l.tauxCommission != null
+                          ? Math.round(l.prixUnitaire * l.quantite * l.tauxCommission / 100)
+                          : 0), 0)
+                    )}
+                  </td>
+                )}
               </tr>
             </tfoot>
           </table>

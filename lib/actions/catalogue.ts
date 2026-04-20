@@ -89,16 +89,23 @@ export async function supprimerCategorie(id: string) {
 export async function creerProduit(formData: FormData) {
   await requireAdmin();
 
-  const nom          = (formData.get("nom") as string).trim();
-  const sku          = (formData.get("sku") as string).trim().toUpperCase();
-  const categorieId  = formData.get("categorieId") as string;
-  const prixUnitaire = formInt(formData.get("prixUnitaire"));
-  const stockActuel  = formInt(formData.get("stockActuel"));
-  const seuilAlerte  = formInt(formData.get("seuilAlerte"), 10);
-  const imageFile    = formData.get("image") as File | null;
+  const nom              = (formData.get("nom") as string).trim();
+  const sku              = (formData.get("sku") as string).trim().toUpperCase();
+  const categorieId      = formData.get("categorieId") as string;
+  const prixUnitaire     = formInt(formData.get("prixUnitaire"));
+  const stockActuel      = formInt(formData.get("stockActuel"));
+  const seuilAlerte      = formInt(formData.get("seuilAlerte"), 10);
+  const imageFile        = formData.get("image") as File | null;
+  const commissionRaw    = formData.get("tauxCommission") as string | null;
+  const tauxCommission   = commissionRaw && commissionRaw.trim() !== ""
+    ? parseFloat(commissionRaw)
+    : null;
 
   if (!nom || !sku || !categorieId || prixUnitaire <= 0) {
     return { error: "Tous les champs obligatoires doivent être remplis." };
+  }
+  if (tauxCommission !== null && (isNaN(tauxCommission) || tauxCommission < 0 || tauxCommission > 100)) {
+    return { error: "Le taux de commission doit être entre 0 et 100." };
   }
 
   const exists = await prisma.produit.findUnique({ where: { sku } });
@@ -114,7 +121,7 @@ export async function creerProduit(formData: FormData) {
   }
 
   await prisma.produit.create({
-    data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, image },
+    data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, tauxCommission, image },
   });
 
   revalidatePath("/catalogue");
@@ -124,16 +131,23 @@ export async function creerProduit(formData: FormData) {
 export async function modifierProduit(id: string, formData: FormData) {
   await requireAdmin();
 
-  const nom          = (formData.get("nom") as string).trim();
-  const sku          = (formData.get("sku") as string).trim().toUpperCase();
-  const categorieId  = formData.get("categorieId") as string;
-  const prixUnitaire = formInt(formData.get("prixUnitaire"));
-  const stockActuel  = formInt(formData.get("stockActuel"));
-  const seuilAlerte  = formInt(formData.get("seuilAlerte"), 10);
-  const imageFile    = formData.get("image") as File | null;
+  const nom              = (formData.get("nom") as string).trim();
+  const sku              = (formData.get("sku") as string).trim().toUpperCase();
+  const categorieId      = formData.get("categorieId") as string;
+  const prixUnitaire     = formInt(formData.get("prixUnitaire"));
+  const stockActuel      = formInt(formData.get("stockActuel"));
+  const seuilAlerte      = formInt(formData.get("seuilAlerte"), 10);
+  const imageFile        = formData.get("image") as File | null;
+  const commissionRaw    = formData.get("tauxCommission") as string | null;
+  const tauxCommission   = commissionRaw && commissionRaw.trim() !== ""
+    ? parseFloat(commissionRaw)
+    : null;
 
   if (!nom || !sku || !categorieId || prixUnitaire <= 0) {
     return { error: "Tous les champs obligatoires doivent être remplis." };
+  }
+  if (tauxCommission !== null && (isNaN(tauxCommission) || tauxCommission < 0 || tauxCommission > 100)) {
+    return { error: "Le taux de commission doit être entre 0 et 100." };
   }
 
   const doublon = await prisma.produit.findFirst({ where: { sku, NOT: { id } } });
@@ -145,7 +159,6 @@ export async function modifierProduit(id: string, formData: FormData) {
   if (imageFile && imageFile.size > 0) {
     try {
       const nouvelleImage = await sauvegarderImage(imageFile);
-      // Supprimer l'ancienne image du disque
       if (produitActuel?.image) await supprimerImage(produitActuel.image);
       image = nouvelleImage;
     } catch (e: unknown) {
@@ -155,7 +168,7 @@ export async function modifierProduit(id: string, formData: FormData) {
 
   await prisma.produit.update({
     where: { id },
-    data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, image },
+    data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, tauxCommission, image },
   });
 
   revalidatePath("/catalogue");

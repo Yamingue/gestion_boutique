@@ -114,6 +114,27 @@ export default function ProduitForm({ categories, produit, action }: Props) {
           <p className="text-xs text-gray-400 mt-1">Alerte si stock ≤ ce seuil</p>
         </div>
 
+        {/* Taux de commission */}
+        <div className="col-span-2">
+          <label className="label">Taux de commission sur vente (%)</label>
+          <div className="flex items-center gap-2">
+            <input
+              name="tauxCommission"
+              type="number"
+              min={0}
+              max={100}
+              step={0.1}
+              defaultValue={produit?.tauxCommission ?? ""}
+              placeholder="Ex : 5"
+              className="input w-40"
+            />
+            <span className="text-gray-500 text-sm">%</span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            Optionnel — laisser vide si aucune commission. Ce taux sera figé sur chaque facture.
+          </p>
+        </div>
+
         {/* Image */}
         <div className="col-span-2">
           <label className="label">Image du produit</label>

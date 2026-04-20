@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Truck,
   RefreshCcw,
+  Percent,
 } from "lucide-react";
 
 export default async function Sidebar() {
@@ -43,6 +44,7 @@ export default async function Sidebar() {
     { href: "/reappro",       label: "Réapprovisionnement", icon: <RefreshCcw size={17} /> },
     { href: "/fournisseurs",  label: "Fournisseurs",        icon: <Truck size={17} /> },
     { href: "/categories",    label: "Catégories",          icon: <Tag size={17} /> },
+    { href: "/commissions",   label: "Commissions",         icon: <Percent size={17} /> },
     { href: "/utilisateurs",  label: "Utilisateurs",        icon: <ShieldCheck size={17} /> },
   ];
 
