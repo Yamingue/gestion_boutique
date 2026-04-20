@@ -22,12 +22,13 @@ const STATUTS = [
 type ProduitAvecCategorie = Produit & { categorie: Categorie };
 
 interface LignePanier {
-  produitId:    string;
-  nom:          string;
-  prixUnitaire: number;
-  stockActuel:  number;
-  quantite:     number;
-  image:        string | null;
+  produitId:      string;
+  nom:            string;
+  prixUnitaire:   number;
+  stockActuel:    number;
+  quantite:       number;
+  image:          string | null;
+  tauxCommission: number | null;
 }
 
 function formatFCFA(n: number) {
@@ -207,6 +208,7 @@ export default function POSInterface({
       return [...prev, {
         produitId: p.id, nom: p.nom, prixUnitaire: p.prixUnitaire,
         stockActuel: p.stockActuel, quantite: 1, image: p.image,
+        tauxCommission: p.tauxCommission ?? null,
       }];
     });
   }
@@ -252,7 +254,12 @@ export default function POSInterface({
     formData.set("notes", notes);
     formData.set("statut", statut);
     formData.set("lignes", JSON.stringify(
-      panier.map((l) => ({ produitId: l.produitId, quantite: l.quantite, prixUnitaire: l.prixUnitaire }))
+      panier.map((l) => ({
+        produitId: l.produitId,
+        quantite: l.quantite,
+        prixUnitaire: l.prixUnitaire,
+        tauxCommission: l.tauxCommission,
+      }))
     ));
 
     startTransition(async () => {
@@ -260,9 +267,7 @@ export default function POSInterface({
       if (result?.error) {
         setError(result.error);
       } else {
-        setSucces("Vente enregistrée avec succès !");
-        viderPanier();
-        router.refresh();
+        router.push(`/factures/${result.factureId}`);
       }
     });
   }

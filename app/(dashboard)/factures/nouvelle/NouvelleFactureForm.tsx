@@ -84,7 +84,7 @@ export default function NouvelleFactureForm({
     startTransition(async () => {
       const result = await creerFacture(formData);
       if (result?.error) setError(result.error);
-      else router.push("/factures");
+      else router.push(`/factures/${result.factureId}`);
     });
   }
 

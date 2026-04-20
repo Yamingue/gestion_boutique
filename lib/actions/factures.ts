@@ -69,10 +69,10 @@ export async function creerFacture(formData: FormData) {
   const totalTTC = lignes.reduce((s, l) => s + l.prixUnitaire * l.quantite, 0);
 
   // Transaction : numérotation + création + décrémentation stock
-  await prisma.$transaction(async (tx) => {
+  const facture = await prisma.$transaction(async (tx) => {
     const numero = await genererNumero();
 
-    await tx.facture.create({
+    const created = await tx.facture.create({
       data: {
         numero,
         clientId,
@@ -89,22 +89,24 @@ export async function creerFacture(formData: FormData) {
           })),
         },
       },
+      select: { id: true },
     });
 
-    // Décrémenter le stock de chaque produit
     for (const l of lignes) {
       await tx.produit.update({
         where: { id: l.produitId },
         data:  { stockActuel: { decrement: l.quantite } },
       });
     }
+
+    return created;
   });
 
   revalidatePath("/factures");
   revalidatePath("/catalogue");
   revalidatePath("/dashboard");
   revalidatePath("/vente");
-  return { error: null };
+  return { error: null, factureId: facture.id };
 }
 
 // ── Changer le statut ───────────────────────────────────────────────────────
