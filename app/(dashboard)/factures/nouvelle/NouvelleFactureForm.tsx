@@ -13,7 +13,7 @@ interface LigneForm {
   prixUnitaire: number;
   stockActuel: number;
   quantite: number;
-  tauxCommission: number | null;
+  montantCommission: number;
 }
 
 function formatFCFA(n: number) {
@@ -39,6 +39,9 @@ export default function NouvelleFactureForm({
     if (lignes.find((l) => l.produitId === produitId)) return;
     const p = produits.find((p) => p.id === produitId);
     if (!p) return;
+    const montantCommission = p.tauxCommission 
+      ? Math.round(p.prixUnitaire * p.tauxCommission / 100)
+      : 0;
     setLignes((prev) => [
       ...prev,
       {
@@ -47,7 +50,7 @@ export default function NouvelleFactureForm({
         prixUnitaire: p.prixUnitaire,
         stockActuel: p.stockActuel,
         quantite: 1,
-        tauxCommission: p.tauxCommission ?? null,
+        montantCommission,
       },
     ]);
   }
@@ -77,7 +80,7 @@ export default function NouvelleFactureForm({
         produitId: l.produitId,
         quantite: l.quantite,
         prixUnitaire: l.prixUnitaire,
-        tauxCommission: l.tauxCommission,
+        montantCommission: l.montantCommission,
       }))
     ));
 
@@ -156,8 +159,8 @@ export default function NouvelleFactureForm({
                   <td className="py-2 font-medium text-gray-800">{l.nom}</td>
                   <td className="py-2 text-right text-gray-600">{formatFCFA(l.prixUnitaire)}</td>
                   <td className="py-2 text-center text-sm">
-                    {l.tauxCommission != null
-                      ? <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">{l.tauxCommission}%</span>
+                    {l.montantCommission > 0
+                      ? <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">{formatFCFA(l.montantCommission)}</span>
                       : <span className="text-gray-300">—</span>
                     }
                   </td>
