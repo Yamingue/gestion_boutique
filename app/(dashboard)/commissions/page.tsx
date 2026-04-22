@@ -41,7 +41,7 @@ export default async function CommissionsPage({
   const dateDebutParsed = dateDebut ? new Date(dateDebut + "T00:00:00") : undefined;
   const dateFinParsed   = dateFin   ? new Date(dateFin   + "T23:59:59") : undefined;
 
-  // Récupérer les factures PAYEES avec leurs lignes et taux de commission
+  // Récupérer les factures PAYEES avec leurs lignes et montant de commission
   const factures = await prisma.facture.findMany({
     where: {
       statut: "PAYEE",
@@ -61,7 +61,7 @@ export default async function CommissionsPage({
         select: {
           quantite: true,
           prixUnitaire: true,
-          tauxCommission: true,
+          montantCommission: true,
           produit: { select: { nom: true } },
         },
       },
@@ -99,16 +99,15 @@ export default async function CommissionsPage({
     for (const l of f.lignes) {
       const sousTotal = l.prixUnitaire * l.quantite;
       agent.totalVentes += sousTotal;
-      if (l.tauxCommission != null && l.tauxCommission > 0) {
-        const commission = Math.round(sousTotal * l.tauxCommission / 100);
-        agent.totalCommission += commission;
+      if (l.montantCommission != null && l.montantCommission > 0) {
+        agent.totalCommission += l.montantCommission;
         agent.details.push({
           factureId: f.numero,
           produit: l.produit.nom,
           quantite: l.quantite,
           prixUnit: l.prixUnitaire,
-          taux: l.tauxCommission,
-          montant: commission,
+          taux: 0,
+          montant: l.montantCommission,
         });
       }
     }
@@ -210,7 +209,6 @@ export default async function CommissionsPage({
                             <th className="text-left px-5 py-2">Produit</th>
                             <th className="text-center px-5 py-2">Qté</th>
                             <th className="text-right px-5 py-2">Prix unit.</th>
-                            <th className="text-center px-5 py-2">Taux</th>
                             <th className="text-right px-5 py-2">Commission</th>
                           </tr>
                         </thead>
@@ -221,18 +219,13 @@ export default async function CommissionsPage({
                               <td className="px-5 py-2 text-gray-800">{d.produit}</td>
                               <td className="px-5 py-2 text-center text-gray-600">{d.quantite}</td>
                               <td className="px-5 py-2 text-right text-gray-600">{formatFCFA(d.prixUnit)}</td>
-                              <td className="px-5 py-2 text-center">
-                                <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-                                  {d.taux}%
-                                </span>
-                              </td>
                               <td className="px-5 py-2 text-right font-semibold text-amber-700">{formatFCFA(d.montant)}</td>
                             </tr>
                           ))}
                         </tbody>
                         <tfoot>
                           <tr className="border-t border-amber-200 bg-amber-50">
-                            <td colSpan={5} className="px-5 py-2 text-right font-semibold text-amber-800 text-sm">
+                            <td colSpan={4} className="px-5 py-2 text-right font-semibold text-amber-800 text-sm">
                               Total commission — {a.nom}
                             </td>
                             <td className="px-5 py-2 text-right font-bold text-amber-800">

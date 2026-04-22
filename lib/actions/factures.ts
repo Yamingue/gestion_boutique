@@ -36,7 +36,7 @@ interface LigneInput {
   produitId: string;
   quantite: number;
   prixUnitaire: number;
-  tauxCommission?: number | null;
+  montantCommission: number;
 }
 
 export async function creerFacture(formData: FormData) {
@@ -82,10 +82,10 @@ export async function creerFacture(formData: FormData) {
         notes,
         lignes: {
           create: lignes.map((l) => ({
-            produitId:      l.produitId,
-            quantite:       l.quantite,
-            prixUnitaire:   l.prixUnitaire,
-            tauxCommission: l.tauxCommission ?? null,
+            produitId:        l.produitId,
+            quantite:         l.quantite,
+            prixUnitaire:     l.prixUnitaire,
+            montantCommission: l.montantCommission ?? 0,
           })),
         },
       },

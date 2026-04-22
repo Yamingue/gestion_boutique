@@ -22,13 +22,13 @@ const STATUTS = [
 type ProduitAvecCategorie = Produit & { categorie: Categorie };
 
 interface LignePanier {
-  produitId:      string;
-  nom:            string;
-  prixUnitaire:   number;
-  stockActuel:    number;
-  quantite:       number;
-  image:          string | null;
-  tauxCommission: number | null;
+  produitId:         string;
+  nom:               string;
+  prixUnitaire:      number;
+  stockActuel:       number;
+  quantite:          number;
+  image:             string | null;
+  montantCommission: number;
 }
 
 function formatFCFA(n: number) {
@@ -197,18 +197,23 @@ export default function POSInterface({
   const total = panier.reduce((s, l) => s + l.prixUnitaire * l.quantite, 0);
 
   function ajouterAuPanier(p: ProduitAvecCategorie) {
+    const sousTotal = p.prixUnitaire;
+    const montantCommission = p.tauxCommission 
+      ? Math.round(sousTotal * p.tauxCommission / 100)
+      : 0;
+    
     setPanier((prev) => {
       const exist = prev.find((l) => l.produitId === p.id);
       if (exist) {
         if (exist.quantite >= p.stockActuel) return prev;
         return prev.map((l) =>
-          l.produitId === p.id ? { ...l, quantite: l.quantite + 1 } : l
+          l.produitId === p.id ? { ...l, quantite: l.quantite + 1, montantCommission: l.montantCommission + montantCommission } : l
         );
       }
       return [...prev, {
         produitId: p.id, nom: p.nom, prixUnitaire: p.prixUnitaire,
         stockActuel: p.stockActuel, quantite: 1, image: p.image,
-        tauxCommission: p.tauxCommission ?? null,
+        montantCommission,
       }];
     });
   }
@@ -258,7 +263,7 @@ export default function POSInterface({
         produitId: l.produitId,
         quantite: l.quantite,
         prixUnitaire: l.prixUnitaire,
-        tauxCommission: l.tauxCommission,
+        montantCommission: l.montantCommission,
       }))
     ));
 
