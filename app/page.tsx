@@ -1,15 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { blobImageSrc } from "@/lib/blobImage";
-import { Package, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Prisma } from "@/generated/prisma/client";
+import { CartProvider } from "@/components/CartProvider";
+import CartButton from "@/components/CartButton";
+import ProduitCardPublic from "@/components/ProduitCardPublic";
 
 export const metadata = { title: "Catalogue — Tching's Fils Multiservices" };
-
-function formatFCFA(n: number) {
-  return new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
-}
 
 export default async function Home({
   searchParams,
@@ -33,6 +30,7 @@ export default async function Home({
   ]);
 
   return (
+    <CartProvider>
     <main className="min-h-screen bg-gray-50">
       {/* Barre du haut */}
       <header className="bg-brand-bleu">
@@ -46,9 +44,12 @@ export default async function Home({
               <p className="text-[11px] text-white/60">Multiservices</p>
             </div>
           </div>
-          <Link href="/login" className="text-sm text-white/70 hover:text-white underline">
-            Espace de gestion
-          </Link>
+          <div className="flex items-center gap-5">
+            <CartButton />
+            <Link href="/login" className="text-sm text-white/70 hover:text-white underline">
+              Espace de gestion
+            </Link>
+          </div>
         </div>
 
         <div className="max-w-6xl mx-auto px-4 pb-12 pt-2">
@@ -117,43 +118,13 @@ export default async function Home({
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {produits.map((p) => {
-              const enRupture = p.stockActuel <= 0;
-              return (
-                <div key={p.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                  <div className="aspect-square bg-gray-100 flex items-center justify-center relative">
-                    {p.image ? (
-                      <Image
-                        src={blobImageSrc(p.image)}
-                        alt={p.nom}
-                        fill
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <Package size={32} className="text-gray-300" />
-                    )}
-                    {enRupture && (
-                      <span className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                        Rupture
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <p className="text-[11px] text-gray-400 uppercase tracking-wide">
-                      {p.categorie.nom}
-                    </p>
-                    <p className="text-sm font-semibold text-gray-900 truncate">{p.nom}</p>
-                    <p className="text-sm font-bold text-brand-bleu mt-1">
-                      {formatFCFA(p.prixUnitaire)}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+            {produits.map((p) => (
+              <ProduitCardPublic key={p.id} produit={p} />
+            ))}
           </div>
         )}
       </div>
     </main>
+    </CartProvider>
   );
 }
