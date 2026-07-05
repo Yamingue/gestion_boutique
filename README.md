@@ -67,7 +67,7 @@ Outil de gestion de stock et de facturation développé pour **Tching's Fils Mul
 
 ## Prérequis
 
-- [Node.js](https://nodejs.org) ≥ 20
+- [Node.js](https://nodejs.org) ≥ 22
 - [Laragon](https://laragon.org) (Apache + MariaDB)
 - PM2 installé globalement : `npm install -g pm2`
 
