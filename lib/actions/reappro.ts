@@ -83,8 +83,8 @@ export async function creerCommande(formData: FormData) {
     });
   });
 
-  revalidatePath("/reappro");
-  revalidatePath("/alertes");
+  revalidatePath("/backoffice/reappro");
+  revalidatePath("/backoffice/alertes");
   return { error: null };
 }
 
@@ -115,10 +115,10 @@ export async function receptionnerCommande(id: string) {
     });
   });
 
-  revalidatePath("/reappro");
-  revalidatePath("/alertes");
-  revalidatePath("/catalogue");
-  revalidatePath("/dashboard");
+  revalidatePath("/backoffice/reappro");
+  revalidatePath("/backoffice/alertes");
+  revalidatePath("/backoffice/catalogue");
+  revalidatePath("/backoffice/dashboard");
 }
 
 // ── Annuler ───────────────────────────────────────────────────────────────
@@ -135,5 +135,5 @@ export async function annulerCommande(id: string) {
     data:  { statut: StatutCommande.ANNULEE },
   });
 
-  revalidatePath("/reappro");
+  revalidatePath("/backoffice/reappro");
 }

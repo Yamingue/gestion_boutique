@@ -7,7 +7,7 @@ export const metadata = { title: "Connexion — Tching's Fils Multiservices" };
 
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
-  if (session) redirect("/dashboard");
+  if (session) redirect("/backoffice/dashboard");
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-brand-bleu">

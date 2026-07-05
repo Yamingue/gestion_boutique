@@ -59,7 +59,7 @@ export async function creerCategorie(formData: FormData) {
   if (existe) return { error: `La catégorie « ${nom} » existe déjà.` };
 
   await prisma.categorie.create({ data: { nom } });
-  revalidatePath("/categories");
+  revalidatePath("/backoffice/categories");
 }
 
 export async function modifierCategorie(id: string, formData: FormData) {
@@ -71,7 +71,7 @@ export async function modifierCategorie(id: string, formData: FormData) {
   if (doublon) return { error: `La catégorie « ${nom} » existe déjà.` };
 
   await prisma.categorie.update({ where: { id }, data: { nom } });
-  revalidatePath("/categories");
+  revalidatePath("/backoffice/categories");
 }
 
 export async function supprimerCategorie(id: string) {
@@ -81,7 +81,7 @@ export async function supprimerCategorie(id: string) {
     throw new Error(`Impossible : ${nbProduits} produit(s) utilisent cette catégorie.`);
   }
   await prisma.categorie.delete({ where: { id } });
-  revalidatePath("/categories");
+  revalidatePath("/backoffice/categories");
 }
 
 // ── Produits ───────────────────────────────────────────────────────────────
@@ -124,8 +124,8 @@ export async function creerProduit(formData: FormData) {
     data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, tauxCommission, image },
   });
 
-  revalidatePath("/catalogue");
-  redirect("/catalogue");
+  revalidatePath("/backoffice/catalogue");
+  redirect("/backoffice/catalogue");
 }
 
 export async function modifierProduit(id: string, formData: FormData) {
@@ -171,8 +171,8 @@ export async function modifierProduit(id: string, formData: FormData) {
     data: { nom, sku, categorieId, prixUnitaire, stockActuel, seuilAlerte, tauxCommission, image },
   });
 
-  revalidatePath("/catalogue");
-  redirect("/catalogue");
+  revalidatePath("/backoffice/catalogue");
+  redirect("/backoffice/catalogue");
 }
 
 export async function supprimerProduit(id: string) {
@@ -180,5 +180,5 @@ export async function supprimerProduit(id: string) {
   const produit = await prisma.produit.findUnique({ where: { id } });
   if (produit?.image) await supprimerImage(produit.image);
   await prisma.produit.delete({ where: { id } });
-  revalidatePath("/catalogue");
+  revalidatePath("/backoffice/catalogue");
 }

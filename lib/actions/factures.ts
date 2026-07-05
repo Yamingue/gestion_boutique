@@ -102,10 +102,10 @@ export async function creerFacture(formData: FormData) {
     return created;
   });
 
-  revalidatePath("/factures");
-  revalidatePath("/catalogue");
-  revalidatePath("/dashboard");
-  revalidatePath("/vente");
+  revalidatePath("/backoffice/factures");
+  revalidatePath("/backoffice/catalogue");
+  revalidatePath("/backoffice/dashboard");
+  revalidatePath("/backoffice/vente");
   return { error: null, factureId: facture.id };
 }
 
@@ -147,6 +147,6 @@ export async function changerStatut(id: string, statut: StatutFacture) {
     await prisma.facture.update({ where: { id }, data: { statut } });
   }
 
-  revalidatePath("/factures");
-  revalidatePath("/dashboard");
+  revalidatePath("/backoffice/factures");
+  revalidatePath("/backoffice/dashboard");
 }

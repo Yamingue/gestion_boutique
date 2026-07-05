@@ -27,25 +27,25 @@ export default async function Sidebar() {
   const isAdmin = session?.user?.role === "ADMIN";
 
   const navItems = [
-    { href: "/dashboard",  label: "Tableau de bord", icon: <LayoutDashboard size={17} /> },
-    { href: "/vente",      label: "Point de vente",  icon: <ShoppingCart size={17} /> },
-    { href: "/catalogue",  label: "Catalogue",        icon: <Package size={17} /> },
+    { href: "/backoffice/dashboard",  label: "Tableau de bord", icon: <LayoutDashboard size={17} /> },
+    { href: "/backoffice/vente",      label: "Point de vente",  icon: <ShoppingCart size={17} /> },
+    { href: "/backoffice/catalogue",  label: "Catalogue",        icon: <Package size={17} /> },
     {
-      href: "/alertes",
+      href: "/backoffice/alertes",
       label: "Alertes stock",
       icon: <AlertTriangle size={17} />,
       badge: nbAlertes > 0 ? nbAlertes : null,
     },
-    { href: "/clients",    label: "Clients",          icon: <Users size={17} /> },
-    { href: "/factures",   label: "Factures",         icon: <FileText size={17} /> },
+    { href: "/backoffice/clients",    label: "Clients",          icon: <Users size={17} /> },
+    { href: "/backoffice/factures",   label: "Factures",         icon: <FileText size={17} /> },
   ];
 
   const adminItems = [
-    { href: "/reappro",       label: "Réapprovisionnement", icon: <RefreshCcw size={17} /> },
-    { href: "/fournisseurs",  label: "Fournisseurs",        icon: <Truck size={17} /> },
-    { href: "/categories",    label: "Catégories",          icon: <Tag size={17} /> },
-    { href: "/commissions",   label: "Commissions",         icon: <Percent size={17} /> },
-    { href: "/utilisateurs",  label: "Utilisateurs",        icon: <ShieldCheck size={17} /> },
+    { href: "/backoffice/reappro",       label: "Réapprovisionnement", icon: <RefreshCcw size={17} /> },
+    { href: "/backoffice/fournisseurs",  label: "Fournisseurs",        icon: <Truck size={17} /> },
+    { href: "/backoffice/categories",    label: "Catégories",          icon: <Tag size={17} /> },
+    { href: "/backoffice/commissions",   label: "Commissions",         icon: <Percent size={17} /> },
+    { href: "/backoffice/utilisateurs",  label: "Utilisateurs",        icon: <ShieldCheck size={17} /> },
   ];
 
   return (

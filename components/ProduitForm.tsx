@@ -196,7 +196,7 @@ export default function ProduitForm({ categories, produit, action }: Props) {
         >
           {isPending ? "Enregistrement…" : produit ? "Mettre à jour" : "Créer le produit"}
         </button>
-        <a href="/catalogue" className="text-sm text-gray-500 hover:text-gray-700 self-center">
+        <a href="/backoffice/catalogue" className="text-sm text-gray-500 hover:text-gray-700 self-center">
           Annuler
         </a>
       </div>

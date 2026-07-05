@@ -8,19 +8,19 @@ export default withAuth(
 
     // Routes réservées aux admins
     const adminRoutes = [
-      "/utilisateurs",
-      "/categories",
-      "/catalogue/nouveau",
-      "/catalogue/",        // /catalogue/[id]/modifier
-      "/clients/",          // /clients/[id]/modifier
-      "/fournisseurs",
-      "/reappro",
+      "/backoffice/utilisateurs",
+      "/backoffice/categories",
+      "/backoffice/catalogue/nouveau",
+      "/backoffice/catalogue/",        // /catalogue/[id]/modifier
+      "/backoffice/clients/",          // /clients/[id]/modifier
+      "/backoffice/fournisseurs",
+      "/backoffice/reappro",
     ];
 
     const isAdminRoute = adminRoutes.some((r) => pathname.startsWith(r));
 
     if (isAdminRoute && role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/backoffice/dashboard", req.url));
     }
 
     return NextResponse.next();
@@ -33,5 +33,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/((?!login|api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/backoffice/:path*"],
 };

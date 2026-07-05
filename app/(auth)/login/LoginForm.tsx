@@ -28,7 +28,7 @@ export default function LoginForm() {
       setError("Email ou mot de passe incorrect.");
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/backoffice/dashboard");
       router.refresh();
     }
   }

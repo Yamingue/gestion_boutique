@@ -95,7 +95,7 @@ export default function UserForm({ user, action }: Props) {
         >
           {isPending ? "Enregistrement…" : user ? "Mettre à jour" : "Créer le compte"}
         </button>
-        <a href="/utilisateurs" className="text-sm text-gray-500 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-5 py-2.5 rounded-lg font-medium transition-colors">
+        <a href="/backoffice/utilisateurs" className="text-sm text-gray-500 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-5 py-2.5 rounded-lg font-medium transition-colors">
           Annuler
         </a>
       </div>

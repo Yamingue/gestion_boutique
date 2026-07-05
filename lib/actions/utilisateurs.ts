@@ -38,8 +38,8 @@ export async function creerUtilisateur(formData: FormData) {
     return { error: error.message || "Erreur lors de la création." };
   }
 
-  revalidatePath("/utilisateurs");
-  redirect("/utilisateurs");
+  revalidatePath("/backoffice/utilisateurs");
+  redirect("/backoffice/utilisateurs");
 }
 
 export async function modifierUtilisateur(id: string, formData: FormData) {
@@ -70,8 +70,8 @@ export async function modifierUtilisateur(id: string, formData: FormData) {
     return { error: error.message || "Erreur lors de la modification." };
   }
 
-  revalidatePath("/utilisateurs");
-  redirect("/utilisateurs");
+  revalidatePath("/backoffice/utilisateurs");
+  redirect("/backoffice/utilisateurs");
 }
 
 export async function supprimerUtilisateur(id: string) {
@@ -85,7 +85,7 @@ export async function supprimerUtilisateur(id: string) {
     }
 
     await prisma.user.delete({ where: { id } });
-    revalidatePath("/utilisateurs");
+    revalidatePath("/backoffice/utilisateurs");
   } catch (error: any) {
     return { error: error.message || "Erreur lors de la suppression." };
   }

@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) return new NextResponse("Non autorisé", { status: 401 });
-
   const url = request.nextUrl.searchParams.get("url");
   if (!url || !url.includes("blob.vercel-storage.com")) {
     return new NextResponse("URL invalide", { status: 400 });

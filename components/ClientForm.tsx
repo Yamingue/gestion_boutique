@@ -58,7 +58,7 @@ export default function ClientForm({ client, action }: Props) {
         >
           {isPending ? "Enregistrement…" : client ? "Mettre à jour" : "Créer le client"}
         </button>
-        <a href="/clients" className="text-sm text-gray-500 hover:text-gray-700 self-center">
+        <a href="/backoffice/clients" className="text-sm text-gray-500 hover:text-gray-700 self-center">
           Annuler
         </a>
       </div>

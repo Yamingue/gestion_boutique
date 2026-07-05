@@ -36,8 +36,8 @@ export async function creerClient(formData: FormData) {
     },
   });
 
-  revalidatePath("/clients");
-  redirect("/clients");
+  revalidatePath("/backoffice/clients");
+  redirect("/backoffice/clients");
 }
 
 export async function modifierClient(id: string, formData: FormData) {
@@ -60,8 +60,8 @@ export async function modifierClient(id: string, formData: FormData) {
     },
   });
 
-  revalidatePath("/clients");
-  redirect("/clients");
+  revalidatePath("/backoffice/clients");
+  redirect("/backoffice/clients");
 }
 
 /** Version POS : crée le client et le retourne directement (pas de redirect) */
@@ -82,8 +82,8 @@ export async function creerClientRapide(formData: FormData) {
     },
   });
 
-  revalidatePath("/clients");
-  revalidatePath("/vente");
+  revalidatePath("/backoffice/clients");
+  revalidatePath("/backoffice/vente");
   return { error: null, client };
 }
 
@@ -96,5 +96,5 @@ export async function supprimerClient(id: string) {
   }
 
   await prisma.client.delete({ where: { id } });
-  revalidatePath("/clients");
+  revalidatePath("/backoffice/clients");
 }

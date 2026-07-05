@@ -57,7 +57,7 @@ export default function FournisseurForm({ action, defaults = {}, submitLabel = "
         >
           {isPending ? "Enregistrement…" : submitLabel}
         </button>
-        <a href="/fournisseurs" className="text-sm text-gray-500 hover:text-gray-700 self-center">
+        <a href="/backoffice/fournisseurs" className="text-sm text-gray-500 hover:text-gray-700 self-center">
           Annuler
         </a>
       </div>

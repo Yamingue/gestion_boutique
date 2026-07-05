@@ -30,8 +30,8 @@ export async function creerFournisseur(formData: FormData) {
     },
   });
 
-  revalidatePath("/fournisseurs");
-  redirect("/fournisseurs");
+  revalidatePath("/backoffice/fournisseurs");
+  redirect("/backoffice/fournisseurs");
 }
 
 export async function modifierFournisseur(id: string, formData: FormData) {
@@ -54,8 +54,8 @@ export async function modifierFournisseur(id: string, formData: FormData) {
     },
   });
 
-  revalidatePath("/fournisseurs");
-  redirect("/fournisseurs");
+  revalidatePath("/backoffice/fournisseurs");
+  redirect("/backoffice/fournisseurs");
 }
 
 export async function supprimerFournisseur(id: string) {
@@ -67,5 +67,5 @@ export async function supprimerFournisseur(id: string) {
   }
 
   await prisma.fournisseur.delete({ where: { id } });
-  revalidatePath("/fournisseurs");
+  revalidatePath("/backoffice/fournisseurs");
 }
