@@ -8,9 +8,12 @@ export default function BoutonsPrint({ factureId }: { factureId: string }) {
 
   return (
     <div className="no-print toolbar">
-      {/* PDF — mise en page A4 couleur */}
-      <button onClick={() => window.print()} style={{ ...btn, background: "#0057A8", color: "#fff" }}>
-        🖨 Imprimer / PDF
+      {/* PDF — généré via @react-pdf/renderer */}
+      <button
+        onClick={() => window.open(`/api/factures/${factureId}/pdf`, "_blank")}
+        style={{ ...btn, background: "#0057A8", color: "#fff" }}
+      >
+        🖨 Télécharger le PDF
       </button>
 
       {/* Ticket thermique — nouvelle fenêtre dédiée 80mm */}

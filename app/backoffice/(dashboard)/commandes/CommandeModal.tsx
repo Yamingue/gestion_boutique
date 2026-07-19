@@ -146,7 +146,7 @@ export default function CommandeModal({ commande }: { commande: CommandeModalDat
                     Voir la facture {commande.facture.numero}
                   </Link>
                   <a
-                    href={`/backoffice/factures/${commande.facture.id}/imprimer`}
+                    href={`/api/factures/${commande.facture.id}/pdf`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 bg-white text-brand-bleu border border-brand-bleu/30 hover:bg-brand-bleu/5 text-sm font-semibold px-4 py-2 rounded-lg transition-colors shadow-sm"

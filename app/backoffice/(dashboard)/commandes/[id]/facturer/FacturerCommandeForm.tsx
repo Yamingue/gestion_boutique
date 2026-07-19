@@ -56,11 +56,11 @@ export default function FacturerCommandeForm({
     startTransition(async () => {
       try {
         const res = await genererFacture(commandeId, formData);
-        router.push(
-          pdf
-            ? `/backoffice/factures/${res.factureId}/imprimer`
-            : `/backoffice/factures/${res.factureId}`,
-        );
+        if (pdf) {
+          // Ouvre le PDF (react-pdf) puis revient sur la fiche facture
+          window.open(`/api/factures/${res.factureId}/pdf`, "_blank");
+        }
+        router.push(`/backoffice/factures/${res.factureId}`);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Erreur lors de la génération.");
       }
