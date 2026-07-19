@@ -3,4 +3,4 @@
  * N'importe PAS depuis "@/generated/prisma/client" (contient PrismaClient/Node.js)
  * mais depuis "@/generated/prisma/enums" (constants purs, safe browser).
  */
-export { StatutFacture, StatutCommande, Role } from "@/generated/prisma/enums";
+export { StatutFacture, StatutCommande, StatutCommandeClient, Role } from "@/generated/prisma/enums";

@@ -18,6 +18,7 @@ interface CartContextValue {
   ajouter:        (p: Omit<LignePanierPublic, "quantite">) => void;
   changerQte:     (produitId: string, qte: number) => void;
   retirer:        (produitId: string) => void;
+  vider:          () => void;
   quantiteTotale: number;
   total:          number;
 }
@@ -69,11 +70,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems((prev) => prev.filter((l) => l.produitId !== produitId));
   }, []);
 
+  const vider = useCallback(() => setItems([]), []);
+
   const quantiteTotale = items.reduce((s, l) => s + l.quantite, 0);
   const total          = items.reduce((s, l) => s + l.quantite * l.prixUnitaire, 0);
 
   return (
-    <CartContext.Provider value={{ items, ajouter, changerQte, retirer, quantiteTotale, total }}>
+    <CartContext.Provider value={{ items, ajouter, changerQte, retirer, vider, quantiteTotale, total }}>
       {children}
     </CartContext.Provider>
   );

@@ -40,7 +40,9 @@ export default async function ImprimerFacturePage({
     <>
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #111; background: #fff; padding: 40px; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #111; background: #eef1f5; padding: 0; }
+        .toolbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 12px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .sheet { background: #fff; max-width: 820px; margin: 28px auto; padding: 48px; border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.10); }
         .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
         .logo-box { display: flex; align-items: center; gap: 12px; }
         .logo-circle { width: 48px; height: 48px; border-radius: 50%; background: #F47920; color: #fff; font-weight: 700; font-size: 22px; display: flex; align-items: center; justify-content: center; }
@@ -70,11 +72,17 @@ export default async function ImprimerFacturePage({
         .notes { border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-bottom: 32px; }
         .notes-title { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 6px; }
         .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 16px; }
-        @media print { .no-print { display: none; } @page { margin: 1cm; } }
+        @media print {
+          .no-print { display: none; }
+          body { background: #fff; }
+          .sheet { max-width: none; margin: 0; padding: 0; border-radius: 0; box-shadow: none; }
+          @page { margin: 1cm; }
+        }
       `}</style>
 
       <BoutonsPrint factureId={facture.id} />
 
+      <div className="sheet">
       {/* En-tête */}
       <div className="header">
         <div className="logo-box">
@@ -147,6 +155,7 @@ export default async function ImprimerFacturePage({
 
       <div className="footer">
         Tching&apos;s Fils Multiservices — Merci de votre confiance
+      </div>
       </div>
     </>
   );

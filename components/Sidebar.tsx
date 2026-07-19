@@ -5,6 +5,7 @@ import NavLink from "./NavLink";
 import {
   LayoutDashboard,
   ShoppingCart,
+  ShoppingBag,
   Package,
   Users,
   FileText,
@@ -15,13 +16,17 @@ import {
   RefreshCcw,
   Percent,
 } from "lucide-react";
+import { StatutCommandeClient } from "@/lib/enums";
 
 export default async function Sidebar() {
-  const [session, nbAlertes] = await Promise.all([
+  const [session, nbAlertes, nbCommandes] = await Promise.all([
     getServerSession(authOptions),
     prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) as count FROM Produit WHERE stockActuel <= seuilAlerte
     `.then((r) => Number(r[0]?.count ?? 0)).catch(() => 0),
+    prisma.commande
+      .count({ where: { statut: StatutCommandeClient.EN_ATTENTE } })
+      .catch(() => 0),
   ]);
 
   const isAdmin = session?.user?.role === "ADMIN";
@@ -29,6 +34,12 @@ export default async function Sidebar() {
   const navItems = [
     { href: "/backoffice/dashboard",  label: "Tableau de bord", icon: <LayoutDashboard size={17} /> },
     { href: "/backoffice/vente",      label: "Point de vente",  icon: <ShoppingCart size={17} /> },
+    {
+      href: "/backoffice/commandes",
+      label: "Commandes",
+      icon: <ShoppingBag size={17} />,
+      badge: nbCommandes > 0 ? nbCommandes : null,
+    },
     { href: "/backoffice/catalogue",  label: "Catalogue",        icon: <Package size={17} /> },
     {
       href: "/backoffice/alertes",
